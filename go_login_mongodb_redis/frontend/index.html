@@ -1,0 +1,130 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Secure Access</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <main class="auth-shell">
+    <aside class="brand-panel">
+      <div class="brand-badge">Secure Login</div>
+      <h1>Welcome to your account.</h1>
+      <p>
+        Manage your profile, stay protected, and access your workspace from one secure dashboard.
+      </p>
+      <ul class="feature-list">
+        <li>Encrypted sessions</li>
+        <li>Fast and responsive access</li>
+        <li>Trusted account protection</li>
+      </ul>
+    </aside>
+
+    <section class="auth-card">
+      <div class="tabs" role="tablist" aria-label="Authentication tabs">
+        <button class="tab active" type="button" data-panel="login" aria-selected="true">Login</button>
+        <button class="tab" type="button" data-panel="signup" aria-selected="false">Sign up</button>
+      </div>
+
+      <form id="loginForm" class="auth-panel" novalidate>
+        <div class="panel-header">
+          <h2>Sign in</h2>
+          <p>Use your email and password to continue.</p>
+        </div>
+
+        <label class="field">
+          <span>Email</span>
+          <input id="le" type="email" placeholder="you@example.com" required>
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="lp" type="password" placeholder="Enter your password" required>
+        </label>
+
+        <div class="meta-row">
+          <label class="check-row">
+            <input type="checkbox">
+            <span>Remember me</span>
+          </label>
+          <a href="#">Forgot password?</a>
+        </div>
+
+        <button type="submit" class="primary-btn">Login</button>
+      </form>
+
+      <form id="signupForm" class="auth-panel hidden" novalidate>
+        <div class="panel-header">
+          <h2>Create account</h2>
+          <p>Start with a secure account in a few seconds.</p>
+        </div>
+
+        <label class="field">
+          <span>Full name</span>
+          <input id="sn" type="text" placeholder="John Doe" required>
+        </label>
+
+        <label class="field">
+          <span>Email</span>
+          <input id="se" type="email" placeholder="you@example.com" required>
+        </label>
+
+        <label class="field">
+          <span>Password</span>
+          <input id="sp" type="password" minlength="6" placeholder="At least 6 characters" required>
+        </label>
+
+        <button type="submit" class="primary-btn">Create account</button>
+      </form>
+
+      <section id="profilePanel" class="auth-panel hidden">
+        <div class="dashboard-layout">
+          <aside class="dashboard-sidebar">
+            <div class="sidebar-brand"><span>◆</span> Stockroom</div>
+            <div class="profile-card">
+              <div class="avatar">A</div>
+              <div><h3 id="profileName">Loading...</h3><p id="profileEmail">Waiting for data</p></div>
+            </div>
+            <nav class="dashboard-nav" aria-label="Dashboard navigation">
+              <a class="nav-link active" href="#products">▦ <span>Products</span></a>
+              <a class="nav-link" href="#profile">◉ <span>Profile</span></a>
+            </nav>
+            <button type="button" class="sidebar-logout" onclick="logout()">↪ <span>Logout</span></button>
+          </aside>
+
+          <div class="dashboard-main">
+            <div class="dashboard-topbar">
+              <div><p class="eyebrow">Workspace / Inventory</p><h2 id="products">Products</h2><p>Manage your product catalog in one place.</p></div>
+              <button type="button" class="secondary-btn small-btn" onclick="loadProducts()">↻ Refresh</button>
+            </div>
+
+            <form id="productForm" class="product-form" novalidate>
+              <div class="form-title"><span class="form-icon">＋</span><div><h3>Add product</h3><p>Enter product details below.</p></div></div>
+              <input id="productId" type="hidden">
+              <label class="field"><span>Name</span><input id="productName" type="text" placeholder="Laptop" required></label>
+              <label class="field"><span>Description</span><input id="productDescription" type="text" placeholder="Product description"></label>
+              <label class="field"><span>Price</span><input id="productPrice" type="number" min="0" step="0.01" placeholder="499.99" required></label>
+              <label class="field"><span>Quantity</span><input id="productQuantity" type="number" min="0" step="1" placeholder="10" required></label>
+              <div class="product-form-actions"><button id="productSubmit" type="submit" class="primary-btn">Add product</button><button id="productCancel" type="button" class="secondary-btn hidden" onclick="resetProductForm()">Cancel</button></div>
+            </form>
+
+            <div class="catalog-heading"><h3>Product catalog</h3><span id="productCount">0 products</span></div>
+            <div id="productList" class="product-list"></div>
+          </div>
+        </div>
+      </section>
+
+      <p id="msg" class="msg" aria-live="polite"></p>
+    </section>
+  </main>
+
+  <script>
+    window.__API_URL__ = "http://localhost:8080/api";
+  </script>
+  <script src="app.js"></script>
+</body>
+</html>
