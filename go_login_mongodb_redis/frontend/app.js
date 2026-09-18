@@ -1,4 +1,4 @@
-const API = (window.__API_URL__ || "http://localhost:8080/api").replace(/\/$/, "");
+const API = (window.__API_URL__ = "https://loginapp-9m83.onrender.com/api").replace(/\/$/, "");
 const $ = (id) => document.getElementById(id);
 const authShell = document.querySelector(".auth-shell");
 
