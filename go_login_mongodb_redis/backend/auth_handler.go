@@ -6,6 +6,7 @@ import (
 	"encoding/hex"
 	"encoding/json"
 	"net/http"
+	"os"
 	"strings"
 	"time"
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -39,7 +40,12 @@ func loginHandler(w http.ResponseWriter, r *http.Request) {
 	if _, err := rand.Read(bytes); err != nil { errorJSON(w, 500, "session creation failed"); return }
 	token := hex.EncodeToString(bytes)
 	if err := rdb.Set(ctx, "session:"+token, user.ID.Hex(), 24*time.Hour).Err(); err != nil { errorJSON(w, 500, "Redis session failed"); return }
-	http.SetCookie(w, &http.Cookie{Name: "session_id", Value: token, Path: "/", HttpOnly: true, SameSite: http.SameSiteLaxMode, MaxAge: 86400})
+	isSecure := strings.EqualFold(os.Getenv("COOKIE_SECURE"), "true") || strings.HasPrefix(r.Host, "localhost") == false
+	if isSecure {
+		http.SetCookie(w, &http.Cookie{Name: "session_id", Value: token, Path: "/", HttpOnly: true, SameSite: http.SameSiteNoneMode, Secure: true, MaxAge: 86400})
+	} else {
+		http.SetCookie(w, &http.Cookie{Name: "session_id", Value: token, Path: "/", HttpOnly: true, SameSite: http.SameSiteLaxMode, MaxAge: 86400})
+	}
 	writeJSON(w, 200, map[string]string{"message": "login successful"})
 }
 
@@ -52,6 +58,11 @@ func profileHandler(w http.ResponseWriter, r *http.Request) {
 
 func logoutHandler(w http.ResponseWriter, r *http.Request) {
 	if cookie, err := r.Cookie("session_id"); err == nil { ctx, cancel := context.WithTimeout(r.Context(), 5*time.Second); defer cancel(); _ = rdb.Del(ctx, "session:"+cookie.Value).Err() }
-	http.SetCookie(w, &http.Cookie{Name: "session_id", Value: "", Path: "/", HttpOnly: true, MaxAge: -1, SameSite: http.SameSiteLaxMode})
+	isSecure := strings.EqualFold(os.Getenv("COOKIE_SECURE"), "true") || !strings.HasPrefix(r.Host, "localhost")
+	if isSecure {
+		http.SetCookie(w, &http.Cookie{Name: "session_id", Value: "", Path: "/", HttpOnly: true, MaxAge: -1, SameSite: http.SameSiteNoneMode, Secure: true})
+	} else {
+		http.SetCookie(w, &http.Cookie{Name: "session_id", Value: "", Path: "/", HttpOnly: true, MaxAge: -1, SameSite: http.SameSiteLaxMode})
+	}
 	writeJSON(w, 200, map[string]string{"message": "logout successful"})
 }
