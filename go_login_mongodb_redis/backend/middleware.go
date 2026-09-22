@@ -4,6 +4,7 @@ import (
 	"context"
 	"net/http"
 	"os"
+	"strings"
 	"time"
 
 	"go.mongodb.org/mongo-driver/v2/bson"
@@ -22,7 +23,7 @@ func sessionUserID(w http.ResponseWriter, r *http.Request) (bson.ObjectID, conte
 
 func cors(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		origin := os.Getenv("CORS_ORIGIN")
+		origin := strings.TrimRight(os.Getenv("CORS_ORIGIN"), "/")
 		if origin == "" {
 			origin = "http://localhost:5500"
 		}
