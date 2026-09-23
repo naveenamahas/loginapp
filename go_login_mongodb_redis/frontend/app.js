@@ -2,6 +2,22 @@ const API = (window.__API_URL__ || "http://localhost:8080/api").replace(/\/$/, "
 const $ = (id) => document.getElementById(id);
 const authShell = document.querySelector(".auth-shell");
 
+function showDashboardPage(page) {
+  const pages = {
+    products: $("productsPage"),
+    profile: $("profilePage")
+  };
+
+  Object.entries(pages).forEach(([key, element]) => {
+    const isVisible = key === page;
+    if (element) element.classList.toggle("hidden", !isVisible);
+  });
+
+  document.querySelectorAll(".nav-link").forEach((btn) => {
+    btn.classList.toggle("active", btn.dataset.page === page);
+  });
+}
+
 function setMessage(text, type = "") {
   const msg = $("msg");
   msg.textContent = text || "";
@@ -33,6 +49,10 @@ function show(type) {
 
 document.querySelectorAll(".tab").forEach((tab) => {
   tab.addEventListener("click", () => show(tab.dataset.panel));
+});
+
+document.querySelectorAll(".nav-link").forEach((btn) => {
+  btn.addEventListener("click", () => showDashboardPage(btn.dataset.page));
 });
 
 $("signupForm").onsubmit = async (e) => {
@@ -82,6 +102,7 @@ $("loginForm").onsubmit = async (e) => {
   }
 
   show("profile");
+  showDashboardPage("products");
   profile();
   loadProducts();
 };
@@ -90,6 +111,17 @@ async function profile() {
   const response = await fetch(API + "/profile", { credentials: "include" });
   const data = await response.json();
 
+  const name = data.name || "Guest user";
+  const email = data.email || "Not signed in";
+
+  $("profileName").textContent = name;
+  $("profileEmail").textContent = email;
+  $("profilePageName").textContent = name;
+  $("profilePageEmail").textContent = email;
+  $("profileAccountName").textContent = name;
+  $("profileAccountEmail").textContent = email;
+  $("profileStatus").textContent = response.ok ? "Logged in" : "Logged out";
+
   if (!response.ok) {
     $("profileName").textContent = "Guest user";
     $("profileEmail").textContent = data.error || "Not signed in";
@@ -97,8 +129,6 @@ async function profile() {
     return;
   }
 
-  $("profileName").textContent = data.name || "User";
-  $("profileEmail").textContent = data.email || "No email";
   $("profilePanel").classList.remove("hidden");
   setMessage("Login successful.", "success");
 }
