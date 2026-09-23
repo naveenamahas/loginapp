@@ -332,11 +332,21 @@ button, input {
 .dashboard-sidebar .profile-card h3 { color: #fff; font-size: 0.83rem; }
 .dashboard-sidebar .profile-card p { color: rgba(255,255,255,0.62); font-size: 0.68rem; overflow-wrap: anywhere; }
 .dashboard-nav { display: grid; gap: 7px; }
-.nav-link { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; color: rgba(255,255,255,0.68); text-decoration: none; font-size: 0.8rem; }
+.nav-link { display: flex; align-items: center; gap: 10px; padding: 10px; border-radius: 8px; border: 0; background: transparent; color: rgba(255,255,255,0.68); text-decoration: none; font-size: 0.8rem; cursor: pointer; width: 100%; text-align: left; }
 .nav-link.active, .nav-link:hover { background: rgba(255,255,255,0.12); color: #fff; }
 .sidebar-logout { display: flex; gap: 10px; align-items: center; margin-top: auto; padding: 10px; border: 0; background: transparent; color: rgba(255,255,255,0.68); font: inherit; font-size: 0.8rem; cursor: pointer; text-align: left; }
 .sidebar-logout:hover { color: #fff; }
 .dashboard-main { min-width: 0; padding: 32px 30px; background: #fbfcff; }
+.dashboard-page { min-height: 520px; }
+.profile-page-card { padding: 20px; border: 1px solid var(--line); border-radius: 16px; background: #fff; box-shadow: 0 10px 25px rgba(18, 32, 79, 0.05); }
+.profile-details-header { display: flex; align-items: center; gap: 18px; margin-bottom: 24px; }
+.avatar.large { width: 68px; height: 68px; font-size: 1.5rem; }
+.profile-details-header h3 { margin: 0 0 4px; font-size: 1.6rem; }
+.profile-details-header p { margin: 0; color: var(--muted); }
+.profile-info-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 12px; }
+.info-box { display: flex; flex-direction: column; gap: 8px; padding: 16px; border: 1px solid var(--line); border-radius: 12px; background: var(--panel-alt); }
+.info-box .label { color: var(--muted); font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; font-weight: 700; }
+.info-box strong { font-size: 1rem; }
 .dashboard-topbar { display: flex; justify-content: space-between; align-items: flex-start; gap: 14px; margin-bottom: 24px; }
 .dashboard-topbar h2 { margin: 3px 0 5px; font-size: 1.8rem; }
 .dashboard-topbar p:not(.eyebrow) { margin: 0; color: var(--muted); font-size: 0.82rem; }
